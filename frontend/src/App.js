@@ -1,42 +1,40 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
-import { ThemeProvider } from '@mui/material/styles';
-import theme from './theme';
-import Usuarios from './pages/Usuarios';
-import Articulos from './pages/Articulos';
-import Noticias from './pages/Noticias';
-import Navbar from './components/Navbar';
+import ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ThemeProvider, CssBaseline } from '@mui/material';
+import darkTheme from './theme';
+import Home from './pages/Home';
 import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import Favorites from './pages/Favorites';
+import Notifications from './pages/Notifications';
+import Profile from './pages/Profile';
+import Article from './pages/Article';
+import Register from './pages/Register';
+import Followers from './pages/Followers';
+import ArticlesList from './pages/ArticlesList';
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
-  const isAuthenticated = !!localStorage.getItem('token');
+function App() {
   return (
-    <Route
-      {...rest}
-      render={(props) =>
-        isAuthenticated ? <Component {...props} /> : <Redirect to="/login" />
-      }
-    />
-  );
-};
-
-const App = () => {
-  return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
       <Router>
-        <Navbar />
-        <Switch>
-          <Route path="/login" component={Login} />
-          <PrivateRoute path="/usuarios" component={Usuarios} />
-          <PrivateRoute path="/articulos" component={Articulos} />
-          <PrivateRoute path="/noticias" component={Noticias} />
-          <Route path="/" exact>
-            <h1>Bienvenido al Blog de Ciencia</h1>
-          </Route>
-        </Switch>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/favorites" element={<Favorites />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/followers" element={<Followers />} />
+          <Route path="/articles" element={<ArticlesList />} />
+          <Route path="/article/:id" element={<Article />} />
+        </Routes>
       </Router>
     </ThemeProvider>
   );
-};
+}
 
+ReactDOM.render(<App />, document.getElementById('root'));
 export default App;
