@@ -3,16 +3,18 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-const usuarioRoutes = require('./routes/usuarios');
-const articuloRoutes = require('./routes/articulos');
-
 app.use(cors());
-app.use(express.json()); // Para parsear JSON en las solicitudes
-app.use('/api/usuarios', usuarioRoutes); // Rutas de usuarios
-app.use('/api/articulos', articuloRoutes); // Rutas de artículos
+app.use(express.json());
 
-const port = process.env.PORT || 3001;
-app.listen(port, () => {
-  console.log(`Servidor corriendo en el puerto ${port}`);
-});
+// Rutas
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/articles', require('./routes/articles'));
+app.use('/api/comments', require('./routes/comments'));
+app.use('/api/favorites', require('./routes/favorites'));
+app.use('/api/notifications', require('./routes/notifications'));
+app.use('/api/followers', require('./routes/followers'));
+app.use('/api/ratings', require('./routes/ratings'));
 
+
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => console.log(`🚀 Servidor en http://localhost:${PORT}`));
