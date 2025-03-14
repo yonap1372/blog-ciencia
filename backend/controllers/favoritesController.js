@@ -1,20 +1,42 @@
-const pool = require('../config/db');
+const Comment = require('../models/commentModel');
 
-exports.getUserFavorites = async (req, res) => {
-  try {
-    const { rows } = await pool.query("SELECT * FROM favoritos WHERE usuario_id = $1", [req.user.id]);
-    res.json(rows);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+const commentController = {
+  getCommentsByArticle: async (req, res) => {
+    try {
+      const comments = await Comment.getByArticle(req.params.articleId);
+      res.json(comments);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+
+  addComment: async (req, res) => {
+    const { contenido } = req.body;
+    try {
+      const newComment = await Comment.create(contenido, req.user.id, req.params.articleId);
+      res.status(201).json({ message: "Comentario agregado", comment: newComment });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+
+  deleteComment: async (req, res) => {
+    try {
+      const comment = await Comment.getById(req.params.id);
+      if (!comment) {
+        return res.status(404).json({ error: "Comentario no encontrado" });
+      }
+
+      if (req.user.id !== comment.usuario_id && req.user.rol !== 'admin' && req.user.rol !== 'moderador') {
+        return res.status(403).json({ error: "No tienes permiso para eliminar este comentario" });
+      }
+
+      const deletedComment = await Comment.delete(req.params.id);
+      res.json({ message: "Comentario eliminado", comment: deletedComment });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
   }
 };
 
-exports.addFavorite = async (req, res) => {
-  const { articulo_id } = req.body;
-  try {
-    await pool.query("INSERT INTO favoritos (usuario_id, articulo_id) VALUES ($1, $2)", [req.user.id, articulo_id]);
-    res.json({ msg: "Artículo agregado a favoritos" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
+module.exports = commentController;

@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ThemeProvider, CssBaseline } from '@mui/material';
 import darkTheme from './theme';
@@ -36,5 +35,4 @@ function App() {
   );
 }
 
-ReactDOM.render(<App />, document.getElementById('root'));
 export default App;

@@ -1,15 +1,18 @@
 const jwt = require('jsonwebtoken');
-const { secret } = require('../config/authConfig');
 
-module.exports = function (req, res, next) {
+const authMiddleware = (req, res, next) => {
   const token = req.header('Authorization');
-  if (!token) return res.status(401).json({ msg: "Acceso denegado" });
+  if (!token) {
+    return res.status(401).json({ error: "Acceso denegado, token no proporcionado" });
+  }
 
   try {
-    const decoded = jwt.verify(token, secret);
+    const decoded = jwt.verify(token.replace('Bearer ', ''), process.env.JWT_SECRET);
     req.user = decoded;
     next();
-  } catch (err) {
-    res.status(400).json({ msg: "Token inválido" });
+  } catch (error) {
+    res.status(401).json({ error: "Token inválido" });
   }
 };
+
+module.exports = authMiddleware;
