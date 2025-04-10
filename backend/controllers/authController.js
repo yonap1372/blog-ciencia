@@ -13,7 +13,7 @@ const authController = {
   
       let assignedRole = 'usuario';
   
-      if (req.user && req.user.rol === 'admin' && ['autor', 'moderador', 'admin'].includes(rol)) {
+      if (['usuario', 'autor'].includes(rol)) {
         assignedRole = rol;
       }
   
@@ -24,6 +24,7 @@ const authController = {
       res.status(500).json({ error: error.message });
     }
   }
+  
   ,
 
   loginUser: async (req, res) => {

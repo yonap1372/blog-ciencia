@@ -1,28 +1,59 @@
 import React, { useContext } from 'react';
-import { AppBar, Toolbar, Typography, Button } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
 const NavBar = () => {
   const { user, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    navigate('/auth');
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
+  const handleProfile = () => {
+    navigate('/profile');
+  };
 
   return (
-    <AppBar position="static" sx={{ background: 'rgba(0, 0, 0, 0.8)', backdropFilter: 'blur(10px)' }}>
+    <AppBar position="static" sx={{ backgroundColor: '#1e1e1e', boxShadow: '0px 4px 20px rgba(0, 229, 255, 0.2)' }}>
       <Toolbar>
-        <Typography variant="h6" sx={{ flexGrow: 1, fontFamily: 'Orbitron' }}>
+        <Typography
+          variant="h5"
+          component="div"
+          sx={{ flexGrow: 1, cursor: 'pointer', color: '#00e5ff' }}
+          onClick={() => navigate('/')}
+        >
           Blog Ciencia
         </Typography>
-        {user && <Button color="inherit" component={Link} to="/followers">Seguidores</Button>}
-        {user && <Button color="inherit" component={Link} to="/socials">Redes Sociales</Button>}
-        <Button color="inherit" component={Link} to="/">Inicio</Button>
-        <Button color="inherit" component={Link} to="/articles">Artículos</Button>
-        {user ? (
-          <>
-            <Button color="inherit" component={Link} to="/profile">Perfil</Button>
-            <Button color="error" onClick={logout}>Cerrar Sesión</Button>
-          </>
+
+        {!user ? (
+          <Button color="inherit" onClick={handleLogin} sx={{ textTransform: 'none', color: '#00e5ff' }}>
+            Iniciar Sesión
+          </Button>
         ) : (
-          <Button color="inherit" component={Link} to="/login">Iniciar Sesión</Button>
+          <Box>
+            <Button 
+              color="inherit" 
+              onClick={handleProfile} 
+              sx={{ textTransform: 'none', color: '#00e5ff', mr: 2 }}
+            >
+              Perfil
+            </Button>
+
+            <Button 
+              color="inherit" 
+              onClick={handleLogout} 
+              sx={{ textTransform: 'none', color: '#00e5ff' }}
+            >
+              Cerrar Sesión
+            </Button>
+          </Box>
         )}
       </Toolbar>
     </AppBar>

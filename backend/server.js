@@ -15,7 +15,7 @@ app.use('/api/favorites', require('./routes/favorites'));
 app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/ratings', require('./routes/ratings'));
 app.use('/api/socials', require('./routes/socials'));
-app.use('/api/follows', require('./routes/follows'));
+app.use('/api/followers', require('./routes/followers'));
 
 
 const PORT = process.env.PORT || 3001;
